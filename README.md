@@ -13,7 +13,6 @@ As an alternative, strings can be used in callback functions.
 
 All indices accept negative numbers, and both are included when indicating a range.
 -1 means the last element of an array. Generally corrected to `i + #self - 1`.
-After it, any indexes that are still out of the array range will be clamped within a range of values between `1` and `#self`.
 
 # Examples
 
