@@ -35,6 +35,7 @@ describe("Test for array.lua", function()
     assert.same({ "d", "b", "c", "d", "e" }, a:copyWithin(1, 4, 4))
     assert.same({ "d", "d", "e", "d", "e" }, a:copyWithin(2, 4))
     assert.same({ "d", "d", "e", "d", "e" }, a)
+    assert.same({ 1, 2, 3, 3, 4 }, Array.copyWithin({ 1, 2, 3, 4, 5 }, -2, -3, -1))
   end)
 
   it("every()", function()

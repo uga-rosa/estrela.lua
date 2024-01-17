@@ -166,10 +166,18 @@ end
 ---@return Array
 function Array:copyWithin(target, start, end_)
   local len = #self
+  target = clamp(target, 1, len)
   start = clamp(start, 1, len)
   end_ = clamp(end_ or len, 1, len)
-  for i = 0, end_ - start do
-    self[target + i] = self[start + i]
+  local src = {}
+  for i = start, end_ do
+    table.insert(src, self[i])
+  end
+  for i, v in ipairs(src) do
+    if self[target + i - 1] == nil then
+      break
+    end
+    self[target + i - 1] = v
   end
   return Array.new(self)
 end
