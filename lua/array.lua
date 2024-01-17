@@ -30,6 +30,14 @@ return function(acc, cur, i, self)
 end
 ]]
 
+---@alias compFn fun(a: unknown, b: unknown): boolean
+
+local compFn_template = [[
+return function(a, b)
+  return %s
+end
+]]
+
 ---@generic T: function | nil
 ---@param fn T | string
 ---@param template? string
@@ -547,9 +555,10 @@ end
 ---
 --- To sort the elements in an array without mutating the original array, use
 --- `Array:toSorted()`.
----@param comp? function {comp} of table.sort({table}, [, {comp}])
+---@param comp? string | compFn {comp} of table.sort({table}, [, {comp}])
 ---@return Array
 function Array:sort(comp)
+  comp = normalizeFn(comp, compFn_template)
   table.sort(self, comp)
   return self
 end
@@ -590,9 +599,10 @@ end
 
 --- It is the copying version of the `Array:sort()` method. It returns a new
 --- array with the elements sorted.
----@param comp? function {comp} of table.sort({table}, [, {comp}])
+---@param comp? string | compFn {comp} of table.sort({table}, [, {comp}])
 ---@return Array
 function Array:toSorted(comp)
+  comp = normalizeFn(comp, compFn_template)
   local new = {}
   for i, v in ipairs(self) do
     new[i] = v
