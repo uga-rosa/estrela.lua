@@ -18,8 +18,12 @@ local Array = require("array")
 
 -- `x` is the element of each array, `i` is its index, and `self` gives access to the array itself.
 local a1 = Array.new({ 1, 2, 3 }):map("x * 2")
+print(a1)
+-- Array[ 2, 4, 6 ]
 
 -- `acc` is the value resulting from the previous call to callbackFn.
 -- `cur` is the value of the current element.
-local sum = Array.new({ 1, 2, 3, 4 }):reduce("cur + acc")
+local sum = Array.new({ 1, 2, 3, 4 }):reduce("acc + cur")
+print(sum)
+-- 10
 ```
