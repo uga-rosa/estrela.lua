@@ -265,6 +265,7 @@ end
 
 --- It creates a new array with all sub-array elements concatenated into it
 --- recursively up to the specified depth.
+--- Use `math.huge` for infinity.
 ---@param depth? integer Default: 1
 ---@return Array
 function Array:flat(depth)
