@@ -11,6 +11,10 @@ Lua does not have a concise lambda expression.
 Anonymous functions are available, but they are often too exaggerated to write very simple processes (like `function(x) return x * 2 end`).
 As an alternative, strings can be used in callback functions.
 
+All indices accept negative numbers, and both are included when indicating a range.
+-1 means the last element of an array. Generally corrected to `i + #self - 1`.
+After it, any indexes that are still out of the array range will be clamped within a range of values between `1` and `#self`.
+
 # Examples
 
 ```lua
@@ -26,4 +30,9 @@ print(a1)
 local sum = Array.new({ 1, 2, 3, 4 }):reduce("acc + cur")
 print(sum)
 -- 10
+
+-- Change the last two element to 5.
+local a2 = Array.new({ 1, 2, 3, 4 }):fill(5, -2)
+print(a2)
+-- Array[ 1, 2, 5, 5 ]
 ```

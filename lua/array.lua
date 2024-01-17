@@ -42,6 +42,22 @@ local function normalizeFn(fn, template)
   return fn
 end
 
+---@param x integer
+---@param min integer
+---@param max integer
+---@return integer
+local function clamp(x, min, max)
+  if x < 0 then
+    x = x + max + 1
+  end
+  if x < min then
+    return min
+  elseif x > max then
+    return max
+  end
+  return x
+end
+
 ---@class Array
 local Array = {}
 Array.__index = Array
@@ -149,7 +165,9 @@ end
 ---@param end_? integer Default: #self
 ---@return Array
 function Array:copyWithin(target, start, end_)
-  end_ = end_ or #self
+  local len = #self
+  start = clamp(start, 1, len)
+  end_ = clamp(end_ or len, 1, len)
   for i = 0, end_ - start do
     self[target + i] = self[start + i]
   end
@@ -178,8 +196,9 @@ end
 ---@param end_? integer Default: #self
 ---@return Array
 function Array:fill(value, start, end_)
-  start = start or 1
-  end_ = end_ or #self
+  local len = #self
+  start = clamp(start or 1, 1, len)
+  end_ = clamp(end_ or len, 1, len)
   for i = start, end_ do
     if self[i] == nil then
       break
@@ -326,7 +345,7 @@ end
 ---@param fromIndex? integer Default: 1
 ---@return boolean
 function Array:includes(searchElement, fromIndex)
-  fromIndex = fromIndex or 1
+  fromIndex = clamp(fromIndex or 1, 1, #self)
   for i = fromIndex, #self do
     if self[i] == searchElement then
       return true
@@ -341,7 +360,7 @@ end
 ---@param fromIndex? integer Default: 1
 ---@return integer
 function Array:indexOf(searchElement, fromIndex)
-  fromIndex = fromIndex or 1
+  fromIndex = clamp(fromIndex or 1, 1, #self)
   for i = fromIndex, #self do
     if self[i] == searchElement then
       return i
@@ -367,7 +386,8 @@ end
 ---@param fromIndex? integer Default: #self
 ---@return integer
 function Array:lastIndexOf(elem, fromIndex)
-  fromIndex = fromIndex or #self
+  local len = #self
+  fromIndex = clamp(fromIndex or len, 1, len)
   for i = fromIndex, 1, -1 do
     if self[i] == elem then
       return i
@@ -480,8 +500,9 @@ end
 ---@param end_? integer Default: #self
 ---@return Array
 function Array:slice(start, end_)
-  start = start or 1
-  end_ = end_ or #self
+  local len = #self
+  start = clamp(start or 1, 1, len)
+  end_ = clamp(end_ or len, 1, len)
   local new = {}
   for i = start, end_ do
     table.insert(new, self[i])
@@ -529,7 +550,7 @@ end
 ---@param ... unknown items
 ---@return Array
 function Array:splice(start, deleteCount, ...)
-  deleteCount = deleteCount or #self - start + 1
+  start = clamp(start, 1, #self)
   for _ = 1, deleteCount do
     table.remove(self, start)
   end
@@ -571,6 +592,8 @@ end
 ---@param ... unknown
 ---@return Array
 function Array:toSpliced(start, deleteCount, ...)
+  local len = #self
+  start = clamp(start, 1, len)
   local new = {}
   for i = 1, start - 1 do
     new[i] = self[i]
@@ -578,7 +601,10 @@ function Array:toSpliced(start, deleteCount, ...)
   for _, v in ipairs({ ... }) do
     table.insert(new, v)
   end
-  for i = start + deleteCount, #self do
+  for i = start + deleteCount, len do
+    if self[i] == nil then
+      break
+    end
     table.insert(new, self[i])
   end
   return Array.new(new)
@@ -602,6 +628,7 @@ end
 ---@param value unknown
 ---@return Array
 function Array:with(index, value)
+  index = clamp(index, 1, #self)
   local new = {}
   for i, v in ipairs(self) do
     new[i] = v
