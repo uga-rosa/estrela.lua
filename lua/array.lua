@@ -181,6 +181,9 @@ function Array:fill(value, start, end_)
   start = start or 1
   end_ = end_ or #self
   for i = start, end_ do
+    if self[i] == nil then
+      break
+    end
     self[i] = value
   end
   return Array.new(self)

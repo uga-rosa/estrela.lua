@@ -47,6 +47,8 @@ describe("Test for array.lua", function()
     assert.same({ 1, 2, 0, 0 }, a:fill(0, 3, 4))
     assert.same({ 1, 5, 5, 5 }, a:fill(5, 2))
     assert.same({ 6, 6, 6, 6 }, a:fill(6))
+    assert.same({ 6, 6, 6, 6 }, a:fill(9, 5))
+    assert.same({ 9, 9, 9, 9 }, a:fill(9, 1, 5))
   end)
 
   it("filter()", function()
