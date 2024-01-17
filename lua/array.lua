@@ -31,15 +31,15 @@ end
 ]]
 
 ---@generic T: function | nil
----@param func T | string
+---@param fn T | string
 ---@param template? string
 ---@return T
-local function normalize(func, template)
+local function normalizeFn(fn, template)
   template = template or callback_template
-  if type(func) == "string" then
-    return assert(load(template:format(func)))()
+  if type(fn) == "string" then
+    return assert(load(template:format(fn)))()
   end
-  return func
+  return fn
 end
 
 ---@class Array
@@ -86,7 +86,7 @@ end
 ---@param mapFn? string | mapFn
 ---@return Array
 function Array.from(list, mapFn)
-  mapFn = normalize(mapFn, mapFn_template)
+  mapFn = normalizeFn(mapFn, mapFn_template)
   local new = {}
   if mapFn == nil then
     for i, v in ipairs(list) do
@@ -161,7 +161,7 @@ end
 ---@param callback string | callbackFn
 ---@return boolean
 function Array:every(callback)
-  callback = normalize(callback)
+  callback = normalizeFn(callback)
   for i, v in ipairs(self) do
     if not callback(v, i, self) then
       return false
@@ -195,7 +195,7 @@ end
 ---@param callback string | callbackFn
 ---@return Array
 function Array:filter(callback)
-  callback = normalize(callback)
+  callback = normalizeFn(callback)
   local new = {}
   for i, v in ipairs(self) do
     if callback(v, i, self) then
@@ -211,7 +211,7 @@ end
 ---@param callback string | callbackFn
 ---@return unknown | nil
 function Array:find(callback)
-  callback = normalize(callback)
+  callback = normalizeFn(callback)
   for i, v in ipairs(self) do
     if callback(v, i, self) then
       return v
@@ -225,7 +225,7 @@ end
 ---@param callback string | callbackFn
 ---@return integer
 function Array:findIndex(callback)
-  callback = normalize(callback)
+  callback = normalizeFn(callback)
   for i, v in ipairs(self) do
     if callback(v, i, self) then
       return i
@@ -240,7 +240,7 @@ end
 ---@param callback string | callbackFn
 ---@return unknown | nil
 function Array:findLast(callback)
-  callback = normalize(callback)
+  callback = normalizeFn(callback)
   for i = #self, 1, -1 do
     if callback(self[i], i, self) then
       return self[i]
@@ -254,7 +254,7 @@ end
 ---@param callback string | callbackFn
 ---@return integer
 function Array:findLastIndex(callback)
-  callback = normalize(callback)
+  callback = normalizeFn(callback)
   for i = #self, 1, -1 do
     if callback(self[i], i, self) then
       return i
@@ -295,7 +295,7 @@ end
 ---@param callback string | callbackFn
 ---@return Array
 function Array:flatMap(callback)
-  callback = normalize(callback)
+  callback = normalizeFn(callback)
   local new = {}
   for i, v in ipairs(self) do
     local result = callback(v, i, self)
@@ -313,7 +313,7 @@ end
 --- It executes a provided function once for each array element.
 ---@param callback string | forEachFn
 function Array:forEach(callback)
-  callback = normalize(callback, forEachFn_template)
+  callback = normalizeFn(callback, forEachFn_template)
   for i, v in ipairs(self) do
     callback(v, i, self)
   end
@@ -380,7 +380,7 @@ end
 ---@param callback string | callbackFn
 ---@return Array
 function Array:map(callback)
-  callback = normalize(callback)
+  callback = normalizeFn(callback)
   local new = {}
   for i, v in ipairs(self) do
     new[i] = callback(v, i, self)
@@ -419,7 +419,7 @@ end
 ---@param callback string | reduceFn
 ---@param initialValue? unknown
 function Array:reduce(callback, initialValue)
-  callback = normalize(callback, reduce_template)
+  callback = normalizeFn(callback, reduce_template)
   local acc = initialValue
   if acc == nil then
     acc = table.remove(self, 1)
@@ -437,7 +437,7 @@ end
 ---@param callback string | reduceFn
 ---@param initialValue? unknown
 function Array:reduceRight(callback, initialValue)
-  callback = normalize(callback, reduce_template)
+  callback = normalizeFn(callback, reduce_template)
   local acc = initialValue
   if acc == nil then
     acc = table.remove(self)
@@ -495,7 +495,7 @@ end
 ---@param callback string | callbackFn
 ---@return boolean
 function Array:some(callback)
-  callback = normalize(callback)
+  callback = normalizeFn(callback)
   for i, v in ipairs(self) do
     if callback(v, i, self) then
       return true
