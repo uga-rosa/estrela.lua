@@ -45,15 +45,20 @@ end
 ---@param x integer
 ---@param min integer
 ---@param max integer
+---@param strict? boolean
 ---@return integer
-local function clamp(x, min, max)
+local function clamp(x, min, max, strict)
   if x < 0 then
     x = x + max + 1
   end
   if x < min then
-    return min
+    if not strict then
+      return min
+    end
   elseif x > max then
-    return max
+    if not strict then
+      return max
+    end
   end
   return x
 end
@@ -205,12 +210,15 @@ end
 ---@return Array
 function Array:fill(value, start, end_)
   local len = #self
-  start = clamp(start or 1, 1, len)
-  end_ = clamp(end_ or len, 1, len)
+  start = clamp(start or 1, 1, len, true)
+  end_ = clamp(end_ or len, 1, len, true)
+  if start < 0 then
+    start = 1
+  end
+  if end_ > len then
+    end_ = len
+  end
   for i = start, end_ do
-    if self[i] == nil then
-      break
-    end
     self[i] = value
   end
   return Array.new(self)
