@@ -15,29 +15,28 @@ concurrency:
 
 jobs:
   test:
+    strategy:
+      matrix:
+        luaVersion: [ "5.4", "5.3", "5.2", "5.1", "luajit" ]
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v3
 
     - name: Setup lua
-      uses: leafo/gh-actions-lua@v8
+      uses: leafo/gh-actions-lua@v9
       with:
-        luaVersion: luajit-2.1.0-beta3
+        luaVersion: ${{ matrix.luaVersion }}
 
     - name: Setup luarocks
       uses: leafo/gh-actions-luarocks@v4
 
-    - name: Setup tools
+    - name: Setup busted
       shell: bash
       run: |
-        luarocks --lua-version=5.1 install luacheck
-        luarocks --lua-version=5.1 install busted
-
-    - name: Lint
-      shell: bash
-      run: make lint
+        luarocks install luacheck
+        luarocks install busted
 
     - name: Run test
       shell: bash
-      run: make test
+      run: make

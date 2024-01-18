@@ -1,3 +1,5 @@
+local load = loadstring or load
+
 local chunk = [[
 return function(%s)
   return %s

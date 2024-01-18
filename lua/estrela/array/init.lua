@@ -1,3 +1,5 @@
+local load = loadstring or load
+
 ---@alias callbackFn fun(x: unknown, i: integer, self: estrela.array): unknown
 
 local callback_template = [[
