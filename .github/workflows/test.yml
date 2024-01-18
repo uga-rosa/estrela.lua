@@ -1,0 +1,43 @@
+name: test
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '**/*.lua'
+      - '.github/workflows/test.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Setup lua
+      uses: leafo/gh-actions-lua@v8
+      with:
+        luaVersion: luajit-2.1.0-beta3
+
+    - name: Setup luarocks
+      uses: leafo/gh-actions-luarocks@v4
+
+    - name: Setup tools
+      shell: bash
+      run: |
+        luarocks --lua-version=5.1 install luacheck
+        luarocks --lua-version=5.1 install busted
+
+    - name: Lint
+      shell: bash
+      run: make lint
+
+    - name: Run test
+      shell: bash
+      run: make test
