@@ -6,3 +6,4 @@ Extend lua syntax by leveraging metatable.
 
 - estrela/array
 - estrela/try
+- estrela/switch
