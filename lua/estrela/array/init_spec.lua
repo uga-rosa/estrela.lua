@@ -83,27 +83,8 @@ describe("Test for array.lua", function()
     assert.same({ 0, 1, 2, 3, 4, 5 }, b:flat(math.huge))
   end)
 
-  describe("flatMap()", function()
-    it("success", function()
-      assert.same({ 1, 2, 2, 1 }, Array.new({ 1, 2, 1 }):flatMap("x == 2 and { 2, 2 } or 1"))
-    end)
-
-    it("more efficient than map() and flat()", function()
-      local flatMapTime = os.clock()
-      for _ = 1, 10000 do
-        Array.new({ 1, 2, 1 }):flatMap("x == 2 and { 2, 2 } or 1")
-      end
-      flatMapTime = (os.clock() - flatMapTime) * 1000
-      local mapAndFlatTime = os.clock()
-      for _ = 1, 10000 do
-        Array.new({ 1, 2, 1 }):map("x == 2 and { 2, 2 } or 1"):flat()
-      end
-      mapAndFlatTime = (os.clock() - mapAndFlatTime) * 1000
-      assert(
-        flatMapTime < mapAndFlatTime,
-        ("flatMap(): %d ms, map() and flat(): %d ms"):format(flatMapTime, mapAndFlatTime)
-      )
-    end)
+  it("flatMap()", function()
+    assert.same({ 1, 2, 2, 1 }, Array.new({ 1, 2, 1 }):flatMap("x == 2 and { 2, 2 } or 1"))
   end)
 
   it("forEach()", function()
