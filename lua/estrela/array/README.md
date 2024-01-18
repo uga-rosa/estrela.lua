@@ -17,7 +17,7 @@ All indices accept negative numbers, and both are included when indicating a ran
 # Examples
 
 ```lua
-local Array = require("array")
+local Array = require("estrela.array")
 
 -- `x` is the element of each array, `i` is its index, and `self` gives access to the array itself.
 local a1 = Array.new({ 1, 2, 3 }):map("x * 2")

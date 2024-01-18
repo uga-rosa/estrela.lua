@@ -1,4 +1,4 @@
-local Array = require("array")
+local Array = require("estrela.array")
 
 describe("Test for array.lua", function()
   it("new()", function()
