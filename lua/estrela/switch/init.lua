@@ -4,11 +4,10 @@ local Array = require("estrela.array")
 local function run(self)
   for _, stmt in ipairs(self._stmt) do
     if stmt.cases:includes(self._var) then
-      stmt.call(self._var)
-      return
+      return stmt.call(self._var)
     end
   end
-  self._default(self._var)
+  return self._default(self._var)
 end
 
 ---@class estrela.switch
