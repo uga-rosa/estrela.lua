@@ -1,4 +1,4 @@
----@alias callbackFn fun(x: unknown, i: integer, self: Array): unknown
+---@alias callbackFn fun(x: unknown, i: integer, self: estrela.array): unknown
 
 local callback_template = [[
 return function(x, i, self)
@@ -14,7 +14,7 @@ return function(x, i)
 end
 ]]
 
----@alias forEachFn fun(x: unknown, i: integer, self: Array)
+---@alias forEachFn fun(x: unknown, i: integer, self: estrela.array)
 
 local forEachFn_template = [[
 return function(x, i, self)
@@ -22,7 +22,7 @@ return function(x, i, self)
 end
 ]]
 
----@alias reduceFn fun(acc: unknown, cur: unknown, i: integer, self: Array): unknown
+---@alias reduceFn fun(acc: unknown, cur: unknown, i: integer, self: estrela.array): unknown
 
 local reduce_template = [[
 return function(acc, cur, i, self)
@@ -71,7 +71,7 @@ local function clamp(x, min, max, strict)
   return x
 end
 
----@class Array
+---@class estrela.array
 local Array = {}
 Array.__index = Array
 Array.__tostring = function(self)
@@ -96,7 +96,7 @@ end
 --- 1. Table with N consecutive integer indices starting from 1 and ending with
 ---    N is considered a list.
 ---@param list? unknown[]
----@return Array
+---@return estrela.array
 function Array.new(list)
   list = list or {}
   return setmetatable(list, Array)
@@ -113,7 +113,7 @@ end
 --- and mapFn's return value is added to the array instead.
 ---@param list unknown[]
 ---@param mapFn? string | mapFn
----@return Array
+---@return estrela.array
 function Array.from(list, mapFn)
   mapFn = normalizeFn(mapFn, mapFn_template)
   local new = {}
@@ -159,7 +159,7 @@ end
 --- It is used to merge two or more arrays. This method does not change the
 --- existing arrays, but instead returns a new array.
 ---@param ... unknown
----@return Array
+---@return estrela.array
 function Array:concat(...)
   local new = {}
   for _, l in ipairs({ self, ... }) do
@@ -176,7 +176,7 @@ end
 ---@param target integer
 ---@param start integer
 ---@param end_? integer Default: #self
----@return Array
+---@return estrela.array
 function Array:copyWithin(target, start, end_)
   local len = #self
   target = clamp(target, 1, len)
@@ -215,7 +215,7 @@ end
 ---@param value unknown
 ---@param start? integer Default: 1
 ---@param end_? integer Default: #self
----@return Array
+---@return estrela.array
 function Array:fill(value, start, end_)
   local len = #self
   start = clamp(start or 1, 1, len, true)
@@ -236,7 +236,7 @@ end
 --- just the elements from the given array that pass the test implemented by the
 --- provided function.
 ---@param callback string | callbackFn
----@return Array
+---@return estrela.array
 function Array:filter(callback)
   callback = normalizeFn(callback)
   local new = {}
@@ -310,7 +310,7 @@ end
 --- recursively up to the specified depth.
 --- Use `math.huge` for infinity.
 ---@param depth? integer Default: 1
----@return Array
+---@return estrela.array
 function Array:flat(depth)
   depth = depth or 1
   local new = {}
@@ -337,7 +337,7 @@ end
 --- `(arr:map(...args):flat())`, but slightly more efficient than calling those
 --- two methods separately.
 ---@param callback string | callbackFn
----@return Array
+---@return estrela.array
 function Array:flatMap(callback)
   callback = normalizeFn(callback)
   local new = {}
@@ -423,7 +423,7 @@ end
 --- It creates a new array populated with the results of calling a provided
 --- function on every element in the calling array.
 ---@param callback string | callbackFn
----@return Array
+---@return estrela.array
 function Array:map(callback)
   callback = normalizeFn(callback)
   local new = {}
@@ -501,7 +501,7 @@ end
 ---
 --- To reverse the elements in an array without mutating the original array, use
 --- `Array:toReversed()`.
----@return Array
+---@return estrela.array
 function Array:reverse()
   local len = #self
   for i = 1, #self / 2 do
@@ -522,7 +522,7 @@ end
 --- the index of items in that array. The original array will not be modified.
 ---@param start? integer Default: 1
 ---@param end_? integer Default: #self
----@return Array
+---@return estrela.array
 function Array:slice(start, end_)
   local len = #self
   start = clamp(start or 1, 1, len)
@@ -556,7 +556,7 @@ end
 --- To sort the elements in an array without mutating the original array, use
 --- `Array:toSorted()`.
 ---@param comp? string | compFn {comp} of table.sort({table}, [, {comp}])
----@return Array
+---@return estrela.array
 function Array:sort(comp)
   comp = normalizeFn(comp, compFn_template)
   table.sort(self, comp)
@@ -573,7 +573,7 @@ end
 ---@param start integer
 ---@param deleteCount integer
 ---@param ... unknown items
----@return Array
+---@return estrela.array
 function Array:splice(start, deleteCount, ...)
   start = clamp(start, 1, #self)
   for _ = 1, deleteCount do
@@ -588,7 +588,7 @@ end
 
 --- It is the copying counterpart of the `Array:reverse()` method. It returns a
 --- new array with the elements in reversed order.
----@return Array
+---@return estrela.array
 function Array:toReversed()
   local new = {}
   for i = #self, 1, -1 do
@@ -600,7 +600,7 @@ end
 --- It is the copying version of the `Array:sort()` method. It returns a new
 --- array with the elements sorted.
 ---@param comp? string | compFn {comp} of table.sort({table}, [, {comp}])
----@return Array
+---@return estrela.array
 function Array:toSorted(comp)
   comp = normalizeFn(comp, compFn_template)
   local new = {}
@@ -616,7 +616,7 @@ end
 ---@param start integer
 ---@param deleteCount integer
 ---@param ... unknown
----@return Array
+---@return estrela.array
 function Array:toSpliced(start, deleteCount, ...)
   local len = #self
   start = clamp(start, 1, len)
@@ -652,7 +652,7 @@ end
 --- replaced with the given value.
 ---@param index integer
 ---@param value unknown
----@return Array
+---@return estrela.array
 function Array:with(index, value)
   index = clamp(index, 1, #self)
   local new = {}
