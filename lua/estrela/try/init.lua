@@ -1,14 +1,13 @@
 local function call(self, ...)
-  if self._catch then
-    local ok, errmsg = pcall(self._try, ...)
-    if not ok then
-      self._catch(errmsg)
-    end
-  else
-    self._try(...)
+  local ok, errmsg = pcall(self._try, ...)
+  if not ok and self._catch then
+    self._catch(errmsg)
   end
   if self._finally then
     self._finally()
+  end
+  if not ok and self._catch == nil then
+    error(errmsg)
   end
 end
 

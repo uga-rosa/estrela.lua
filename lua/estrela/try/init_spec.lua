@@ -35,10 +35,14 @@ describe("test for try.lua", function()
       assert.same({ "a", "b" }, x)
     end)
     it("unhandled error", function()
+      local result = ""
       local ok = pcall(try(function()
         error("raise error!")
-      end):finally(function() end))
+      end):finally(function()
+        result = "finally"
+      end))
       assert.falsy(ok)
+      assert.same("finally", result)
     end)
   end)
 
